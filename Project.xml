@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildster directory="../build" distribution="../Distribution">
+  <project directory="../Project">
+    <dependencies>
+      <dependency>
+        <label>sdlmixer</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>
+            <switch id="BUILDSTER_OS">
+              <case check="Windows">https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-devel-1.2.12-VC.zip</case>
+              <default><quit></quit></default>
+            </switch>
+          </url>
+          <wget>sdlmixer.zip</wget>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <shells>
+            <shell>
+              <work><origin></origin></work>
+              <commands>
+                <command><extract><origin></origin>/sdlmixer.zip</extract></command>
+              </commands>
+            </shell>
+          </shells>
+        </build>
+        <exports>
+          <export type="headers">
+            <key>SDL_MIXER_INCLUDE_PATH</key>
+            <value><origin></origin>/include</value>
+          </export>
+          <export type="libraries">
+            <key>SDL_MIXER_LIBRARIES</key>
+            <value><origin></origin>/lib</value>
+          </export>
+        </exports>
+        <imports></imports>
+      </dependency>
+      <dependency>
+        <label>sdlmixer2</label>
+        <subpath>build</subpath>
+        <remote>
+          <url>
+            <switch id="BUILDSTER_OS">
+              <case check="Windows">https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-VC.zip</case>
+              <default><quit></quit></default>
+            </switch>
+          </url>
+          <wget>sdlmixer2.zip</wget>
+        </remote>
+        <build>
+          <arguments></arguments>
+          <shells>
+            <shell>
+              <work><origin></origin></work>
+              <commands>
+                <command><extract><origin></origin>/sdlmixer2.zip</extract></command>
+              </commands>
+            </shell>
+          </shells>
+        </build>
+        <exports>
+          <export type="headers">
+            <key>SDL_MIXER_2_INCLUDE_PATH</key>
+            <value><origin></origin>/include</value>
+          </export>
+          <export type="libraries">
+            <key>SDL_MIXER_2_LIBRARIES</key>
+            <value><origin></origin>/lib</value>
+          </export>
+        </exports>
+        <imports></imports>
+      </dependency>
+    </dependencies>
+    <targets>
+      <target type="executable">
+        <label>fheroes2</label>
+        <generator>
+          <switch id="BUILDSTER_OS">
+            <case check="Windows">Visual Studio 16 2019</case>
+            <case check="Linux">CodeBlocks - Unix Makefiles</case>
+            <case check="Darwin">CodeBlocks - Unix Makefiles</case>
+            <default><quit></quit></default>
+          </switch>
+        </generator>
+        <definitions></definitions>
+        <links>
+          <if_check id="BUILDSTER_OS" check="Windows">
+            <link>setupapi</link>
+            <link>iphlpapi</link>
+            <link>psapi</link>
+            <link>userenv</link>
+            <link>gdi32</link>
+            <link>crypt32</link>
+            <link>ws2_32</link>
+          </if_check>
+        </links>
+        <imports>
+          <import>sdlmixer</import>
+          <import>sdlmixer2</import>
+          <import>sdlimage2</import>
+          <import>sdl</import>
+          <import>sdl2</import>
+        </imports>
+      </target>
+    </targets>
+  </project>
+</buildster>
