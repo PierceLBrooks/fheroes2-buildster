@@ -34,15 +34,15 @@
           </cmake>
         </build>
         <exports>
-          <export type="headers">
+          <export type="headers" except="fheroes2">
             <key>ZLIB_INCLUDE_DIRS</key>
             <value><install></install>/include</value>
           </export>
-          <export type="libraries">
+          <export type="libraries" except="fheroes2">
             <key>ZLIB_LIBRARIES</key>
             <value><install></install>/bin/libzlib.dll</value>
           </export>
-          <export type="other">
+          <export type="all">
             <key>ZLIB_ROOT</key>
             <value><install></install></value>
           </export>
@@ -201,7 +201,7 @@
           </export>
           <export type="libraries">
             <key>SDL2MAIN_LIBRARY</key>
-            <value><origin></origin>/sdl2/SDL2-2.0.12/i686-w64-mingw32/bin/SDL2.dll</value>
+            <value><origin></origin>/sdl2/SDL2-2.0.12/i686-w64-mingw32/lib/libSDL2main.a</value>
           </export>
         </exports>
         <imports></imports>
