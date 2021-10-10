@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildster directory="../build" distribution="../Distribution">
   <project directory="../Project">
-    <if_check id="BUILDSTER_OS" check="Windows">
-      <pre>
+    <pre>
+      <if_check id="BUILDSTER_OS" check="Windows">
         <set>
           <key>MIXER_VERSION</key>
           <value><json key="MIXER_VERSION"><read><origin></origin>/../sdl.json</read></json></value>
@@ -15,8 +15,8 @@
           <key>SDL_VERSION</key>
           <value><json key="SDL_VERSION"><read><origin></origin>/../sdl.json</read></json></value>
         </set>
-      </pre>
-    </if_check>
+      </if_check>
+    </pre>
     <dependencies>
       <if_check id="BUILDSTER_OS" check="Windows">
         <dependency>
