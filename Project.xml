@@ -1,211 +1,249 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildster directory="../build" distribution="../Distribution">
   <project directory="../Project">
+    <pre>
+      <set>
+        <key>MIXER_VERSION</key>
+        <value><json key="MIXER_VERSION"><read><origin></origin>/../sdl.json</read></json></value>
+      </set>
+      <set>
+        <key>IMAGE_VERSION</key>
+        <value><json key="IMAGE_VERSION"><read><origin></origin>/../sdl.json</read></json></value>
+      </set>
+      <set>
+        <key>SDL_VERSION</key>
+        <value><json key="SDL_VERSION"><read><origin></origin>/../sdl.json</read></json></value>
+      </set>
+    </pre>
     <dependencies>
-      <dependency>
-        <label>zlib</label>
-        <subpath>build</subpath>
-        <remote>
-          <url>https://github.com/PierceLBrooks/zlib.git</url>
-          <git_repo>
-            <branch>master</branch>
-            <credentials>
-              <username>username</username>
-              <password>password</password>
-            </credentials>
-          </git_repo>
-        </remote>
-        <build>
-          <arguments>
-            <argument>-DPNG_TESTS=OFF</argument>
-            <argument>-DPNG_EXECUTABLES=OFF</argument>
-            <argument>-DPNG_STATIC=OFF</argument>
-          </arguments>
-          <cmake>
-            <generator>
+      <if_check id="BUILDSTER_OS" check="Windows">
+        <dependency>
+          <label>zlib</label>
+          <subpath>build</subpath>
+          <remote>
+            <url>https://github.com/PierceLBrooks/zlib.git</url>
+            <git_repo>
+              <branch>master</branch>
+              <credentials>
+                <username>username</username>
+                <password>password</password>
+              </credentials>
+            </git_repo>
+          </remote>
+          <build>
+            <arguments>
+              <argument>-DPNG_TESTS=OFF</argument>
+              <argument>-DPNG_EXECUTABLES=OFF</argument>
+              <argument>-DPNG_STATIC=OFF</argument>
+            </arguments>
+            <cmake>
+              <generator>
+                <switch id="BUILDSTER_OS">
+                  <case check="Windows">MinGW Makefiles</case>
+                  <case check="Linux">Unix Makefiles</case>
+                  <case check="Darwin">Unix Makefiles</case>
+                  <default><quit></quit></default>
+                </switch>
+              </generator>
+              <source>..</source>
+            </cmake>
+          </build>
+          <exports>
+            <export type="headers" except="fheroes2">
+              <key>ZLIB_INCLUDE_DIRS</key>
+              <value><install></install>/include</value>
+            </export>
+            <export type="libraries" except="fheroes2">
+              <key>ZLIB_LIBRARIES</key>
+              <value>
+                <switch id="BUILDSTER_OS">
+                  <case check="Windows"><install></install>/bin/libzlib.dll</case>
+                  <default><quit></quit></default>
+                </switch>
+              </value>
+            </export>
+            <export type="all">
+              <key>ZLIB_ROOT</key>
+              <value><install></install></value>
+            </export>
+          </exports>
+          <imports>
+            <import>zlib</import>
+          </imports>
+        </dependency>
+        <dependency>
+          <label>libpng</label>
+          <subpath>build</subpath>
+          <remote>
+            <url>https://github.com/PierceLBrooks/libpng.git</url>
+            <git_repo>
+              <branch>libpng16</branch>
+              <credentials>
+                <username>username</username>
+                <password>password</password>
+              </credentials>
+            </git_repo>
+          </remote>
+          <build>
+            <arguments>
+              <argument>-DPNG_TESTS=OFF</argument>
+              <argument>-DPNG_EXECUTABLES=OFF</argument>
+              <argument>-DPNG_STATIC=OFF</argument>
+              <argument>-DPNG_BUILD_ZLIB=ON</argument>
+            </arguments>
+            <cmake>
+              <generator>
+                <switch id="BUILDSTER_OS">
+                  <case check="Windows">MinGW Makefiles</case>
+                  <case check="Linux">Unix Makefiles</case>
+                  <case check="Darwin">Unix Makefiles</case>
+                  <default><quit></quit></default>
+                </switch>
+              </generator>
+              <source>..</source>
+            </cmake>
+          </build>
+          <exports>
+            <export type="headers">
+              <key>PNG_PNG_INCLUDE_DIR</key>
+              <value><install></install>/include</value>
+            </export>
+            <export type="libraries">
+              <key>PNG_LIBRARY</key>
+              <value>
+                <switch id="BUILDSTER_OS">
+                  <case check="Windows">
+                    <switch id="BUILDSTER_VARIANT">
+                      <case check="Debug"><install></install>/bin/libpng16d.dll</case>
+                      <case check="Release"><install></install>/bin/libpng16.dll</case>
+                      <default><quit></quit></default>
+                    </switch>
+                  </case>
+                  <default><quit></quit></default>
+                </switch>
+              </value>
+            </export>
+          </exports>
+          <imports>
+            <import>zlib</import>
+          </imports>
+        </dependency>
+        <dependency>
+          <label>sdlmixer2</label>
+          <subpath>build</subpath>
+          <remote>
+            <url>
               <switch id="BUILDSTER_OS">
-                <case check="Windows">MinGW Makefiles</case>
-                <case check="Linux">Unix Makefiles</case>
-                <case check="Darwin">Unix Makefiles</case>
+                <case check="Windows">https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-<data id="MIXER_VERSION"></data>-mingw.tar.gz</case>
                 <default><quit></quit></default>
               </switch>
-            </generator>
-            <source>..</source>
-          </cmake>
-        </build>
-        <exports>
-          <export type="headers" except="fheroes2">
-            <key>ZLIB_INCLUDE_DIRS</key>
-            <value><install></install>/include</value>
-          </export>
-          <export type="libraries" except="fheroes2">
-            <key>ZLIB_LIBRARIES</key>
-            <value><install></install>/bin/libzlib.dll</value>
-          </export>
-          <export type="all">
-            <key>ZLIB_ROOT</key>
-            <value><install></install></value>
-          </export>
-        </exports>
-        <imports>
-          <import>zlib</import>
-        </imports>
-      </dependency>
-      <dependency>
-        <label>libpng</label>
-        <subpath>build</subpath>
-        <remote>
-          <url>https://github.com/PierceLBrooks/libpng.git</url>
-          <git_repo>
-            <branch>libpng16</branch>
-            <credentials>
-              <username>username</username>
-              <password>password</password>
-            </credentials>
-          </git_repo>
-        </remote>
-        <build>
-          <arguments>
-            <argument>-DPNG_TESTS=OFF</argument>
-            <argument>-DPNG_EXECUTABLES=OFF</argument>
-            <argument>-DPNG_STATIC=OFF</argument>
-            <argument>-DPNG_BUILD_ZLIB=ON</argument>
-          </arguments>
-          <cmake>
-            <generator>
+            </url>
+            <wget>sdlmixer2.tar.gz</wget>
+          </remote>
+          <build>
+            <arguments></arguments>
+            <shells>
+              <shell>
+                <work><origin></origin></work>
+                <commands>
+                  <command><extract><origin></origin>/sdlmixer2.tar.gz</extract></command>
+                </commands>
+              </shell>
+            </shells>
+            <post><message>MIXER_VERSION=<data id="MIXER_VERSION"></data></message></post>
+          </build>
+          <exports>
+            <export type="headers">
+              <key>SDL2_MIXER_INCLUDE_DIR</key>
+              <value><origin></origin>/sdlmixer2/SDL2_mixer-<data id="MIXER_VERSION"></data>/<data id="MINGW_TRIPLET"></data>/include/SDL2</value>
+            </export>
+            <export type="libraries">
+              <key>SDL2_MIXER_LIBRARY</key>
+              <value><origin></origin>/sdlmixer2/SDL2_mixer-<data id="MIXER_VERSION"></data>/<data id="MINGW_TRIPLET"></data>/bin/SDL2_mixer.dll</value>
+            </export>
+          </exports>
+          <imports></imports>
+        </dependency>
+        <dependency>
+          <label>sdlimage2</label>
+          <subpath>build</subpath>
+          <remote>
+            <url>
               <switch id="BUILDSTER_OS">
-                <case check="Windows">MinGW Makefiles</case>
-                <case check="Linux">Unix Makefiles</case>
-                <case check="Darwin">Unix Makefiles</case>
+                <case check="Windows">https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-<data id="IMAGE_VERSION"></data>-mingw.tar.gz</case>
                 <default><quit></quit></default>
               </switch>
-            </generator>
-            <source>..</source>
-          </cmake>
-        </build>
-        <exports>
-          <export type="headers">
-            <key>PNG_PNG_INCLUDE_DIR</key>
-            <value><install></install>/include</value>
-          </export>
-          <export type="libraries">
-            <key>PNG_LIBRARY</key>
-            <value><install></install>/bin/libpng16d.dll</value>
-          </export>
-        </exports>
-        <imports>
-          <import>zlib</import>
-        </imports>
-      </dependency>
-      <dependency>
-        <label>sdlmixer2</label>
-        <subpath>build</subpath>
-        <remote>
-          <url>
-            <switch id="BUILDSTER_OS">
-              <case check="Windows">https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-mingw.tar.gz</case>
-              <default><quit></quit></default>
-            </switch>
-          </url>
-          <wget>sdlmixer2.tar.gz</wget>
-        </remote>
-        <build>
-          <arguments></arguments>
-          <shells>
-            <shell>
-              <work><origin></origin></work>
-              <commands>
-                <command><extract><origin></origin>/sdlmixer2.tar.gz</extract></command>
-              </commands>
-            </shell>
-          </shells>
-        </build>
-        <exports>
-          <export type="headers">
-            <key>SDL2_MIXER_INCLUDE_DIR</key>
-            <value><origin></origin>/sdlmixer2/SDL2_mixer-2.0.4/i686-w64-mingw32/include/SDL2</value>
-          </export>
-          <export type="libraries">
-            <key>SDL2_MIXER_LIBRARY</key>
-            <value><origin></origin>/sdlmixer2/SDL2_mixer-2.0.4/i686-w64-mingw32/bin/SDL2_mixer.dll</value>
-          </export>
-        </exports>
-        <imports></imports>
-      </dependency>
-      <dependency>
-        <label>sdlimage2</label>
-        <subpath>build</subpath>
-        <remote>
-          <url>
-            <switch id="BUILDSTER_OS">
-              <case check="Windows">https://www.libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-mingw.tar.gz</case>
-              <default><quit></quit></default>
-            </switch>
-          </url>
-          <wget>sdlimage2.tar.gz</wget>
-        </remote>
-        <build>
-          <arguments></arguments>
-          <shells>
-            <shell>
-              <work><origin></origin></work>
-              <commands>
-                <command><extract><origin></origin>/sdlimage2.tar.gz</extract></command>
-              </commands>
-            </shell>
-          </shells>
-        </build>
-        <exports>
-          <export type="headers">
-            <key>SDL2_IMAGE_INCLUDE_DIR</key>
-            <value><origin></origin>/sdlimage2/SDL2_image-2.0.5/i686-w64-mingw32/include/SDL2</value>
-          </export>
-          <export type="libraries">
-            <key>SDL2_IMAGE_LIBRARY</key>
-            <value><origin></origin>/sdlimage2/SDL2_image-2.0.5/i686-w64-mingw32/bin/SDL2_image.dll</value>
-          </export>
-        </exports>
-        <imports></imports>
-      </dependency>
-      <dependency>
-        <label>sdl2</label>
-        <subpath>build</subpath>
-        <remote>
-          <url>
-            <switch id="BUILDSTER_OS">
-              <case check="Windows">https://www.libsdl.org/release/SDL2-devel-2.0.12-mingw.tar.gz</case>
-              <default><quit></quit></default>
-            </switch>
-          </url>
-          <wget>sdl2.tar.gz</wget>
-        </remote>
-        <build>
-          <arguments></arguments>
-          <shells>
-            <shell>
-              <work><origin></origin></work>
-              <commands>
-                <command><extract><origin></origin>/sdl2.tar.gz</extract></command>
-              </commands>
-            </shell>
-          </shells>
-        </build>
-        <exports>
-          <export type="headers">
-            <key>SDL2_INCLUDE_DIR</key>
-            <value><origin></origin>/sdl2/SDL2-2.0.12/i686-w64-mingw32/include/SDL2</value>
-          </export>
-          <export type="libraries">
-            <key>SDL2_LIBRARY</key>
-            <value><origin></origin>/sdl2/SDL2-2.0.12/i686-w64-mingw32/bin/SDL2.dll</value>
-          </export>
-          <export type="libraries">
-            <key>SDL2MAIN_LIBRARY</key>
-            <value><origin></origin>/sdl2/SDL2-2.0.12/i686-w64-mingw32/lib/libSDL2main.a</value>
-          </export>
-        </exports>
-        <imports></imports>
-      </dependency>
+            </url>
+            <wget>sdlimage2.tar.gz</wget>
+          </remote>
+          <build>
+            <arguments></arguments>
+            <shells>
+              <shell>
+                <work><origin></origin></work>
+                <commands>
+                  <command><extract><origin></origin>/sdlimage2.tar.gz</extract></command>
+                </commands>
+              </shell>
+            </shells>
+            <post><message>IMAGE_VERSION=<data id="IMAGE_VERSION"></data></message></post>
+          </build>
+          <exports>
+            <export type="headers">
+              <key>SDL2_IMAGE_INCLUDE_DIR</key>
+              <value><origin></origin>/sdlimage2/SDL2_image-<data id="IMAGE_VERSION"></data>/<data id="MINGW_TRIPLET"></data>/include/SDL2</value>
+            </export>
+            <export type="libraries">
+              <key>SDL2_IMAGE_LIBRARY</key>
+              <value><origin></origin>/sdlimage2/SDL2_image-<data id="IMAGE_VERSION"></data>/<data id="MINGW_TRIPLET"></data>/bin/SDL2_image.dll</value>
+            </export>
+          </exports>
+          <imports></imports>
+        </dependency>
+        <dependency>
+          <label>sdl2</label>
+          <subpath>build</subpath>
+          <remote>
+            <url>
+              <switch id="BUILDSTER_OS">
+                <case check="Windows">https://www.libsdl.org/release/SDL2-devel-<data id="SDL_VERSION"></data>-mingw.tar.gz</case>
+                <default><quit></quit></default>
+              </switch>
+            </url>
+            <wget>sdl2.tar.gz</wget>
+          </remote>
+          <build>
+            <arguments></arguments>
+            <shells>
+              <shell>
+                <work><origin></origin></work>
+                <commands>
+                  <command><extract><origin></origin>/sdl2.tar.gz</extract></command>
+                </commands>
+              </shell>
+            </shells>
+            <post><message>SDL_VERSION=<data id="SDL_VERSION"></data></message></post>
+          </build>
+          <exports>
+            <export type="headers">
+              <key>SDL2_INCLUDE_DIR</key>
+              <value><origin></origin>/sdl2/SDL2-<data id="SDL_VERSION"></data>/<data id="MINGW_TRIPLET"></data>/include/SDL2</value>
+            </export>
+            <export type="libraries">
+              <key>SDL2_LIBRARY</key>
+              <value><origin></origin>/sdl2/SDL2-<data id="SDL_VERSION"></data>/<data id="MINGW_TRIPLET"></data>/bin/SDL2.dll</value>
+            </export>
+            <export type="libraries">
+              <key>SDL2MAIN_LIBRARY</key>
+              <value><origin></origin>/sdl2/SDL2-<data id="SDL_VERSION"></data>/<data id="MINGW_TRIPLET"></data>/lib/libSDL2main.a</value>
+            </export>
+          </exports>
+          <imports></imports>
+        </dependency>
+        <else>
+          <message>No dependency management necessary when not on Windows!</message>
+        </else>
+      </if_check>
     </dependencies>
     <targets>
       <target type="executable">
@@ -236,13 +274,42 @@
           </if_check>
         </links>
         <imports>
-          <import>zlib</import>
-          <import>libpng</import>
-          <import>sdlmixer2</import>
-          <import>sdlimage2</import>
-          <import>sdl2</import>
+          <if_check id="BUILDSTER_OS" check="Windows">
+            <import>zlib</import>
+            <import>libpng</import>
+            <import>sdlmixer2</import>
+            <import>sdlimage2</import>
+            <import>sdl2</import>
+          </if_check>
         </imports>
       </target>
     </targets>
+    <post>
+      <if_check id="BUILDSTER_OS" check="Windows">
+        <message>MINGW_TRIPLET=<data id="MINGW_TRIPLET"></data></message>
+      </if_check>
+      <shells>
+        <shell>
+          <work><origin></origin></work>
+          <commands>
+            <command>
+              <delete><distribution></distribution>/.gitignore</delete>
+            </command>
+            <command>
+              <copy>
+                <from><origin></origin>/../.gitignore</from>
+                <to><distribution></distribution>/</to>
+              </copy>
+            </command>
+            <command>
+              <write>
+                <destination><distribution></distribution>/buildster.log</destination>
+                <content><log></log></content>
+              </write>
+            </command>
+          </commands>
+        </shell>
+      </shells>
+    </post>
   </project>
 </buildster>
